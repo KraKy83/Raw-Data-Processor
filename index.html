@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Raw Data Processor with Selectable Groups</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9fafb;
+      color: #333;
+      padding: 40px 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #1e40af;
+    }
+
+    p {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 30px;
+      color: #555;
+      font-size: 1rem;
+    }
+
+    pre {
+      background: #e5e7eb;
+      padding: 10px 15px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      max-width: 100%;
+      overflow-x: auto;
+      user-select: all;
+      margin: 0 auto 30px auto;
+      width: fit-content;
+    }
+
+    textarea {
+      width: 100%;
+      height: 220px;
+      font-family: monospace;
+      font-size: 14px;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      box-sizing: border-box;
+      resize: vertical;
+      transition: border-color 0.3s ease;
+      margin-bottom: 10px;
+    }
+
+    textarea:focus {
+      border-color: #2563eb;
+      outline: none;
+      box-shadow: 0 0 6px #93c5fd;
+    }
+
+    .btn {
+      display: inline-block;
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+
+    .btn:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-secondary {
+      background: #4b5563;
+    }
+
+    .btn-secondary:hover {
+      background: #374151;
+    }
+
+    .button-row {
+      margin-bottom: 30px;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+
+    #output {
+      background: #e0e7ff;
+      padding: 25px 30px;
+      margin-top: 30px;
+      border-radius: 12px;
+      border: 1px solid #a5b4fc;
+      min-height: 180px;
+      font-family: monospace;
+      font-size: 14px;
+      color: #1e40af;
+      max-height: 400px;
+      overflow-y: auto;
+      box-shadow: 0 4px 10px rgb(29 78 216 / 0.1);
+    }
+
+    .group {
+      margin-bottom: 22px;
+      border-bottom: 1px solid #bfcffd;
+      padding-bottom: 14px;
+    }
+
+    .group label {
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.15rem;
+      user-select: none;
+      color: #1e40af;
+    }
+
+    .emails {
+      margin-left: 28px;
+      margin-top: 8px;
+      color: #2c5282;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 13px;
+      line-height: 1.4;
+      letter-spacing: 0.02em;
+    }
+
+    /* Send Email button container below output */
+    #sendEmailContainer {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    #sendEmailBtn {
+      background: #16a34a;
+      padding: 14px 36px;
+      font-size: 1.1rem;
+      border-radius: 10px;
+      font-weight: 700;
+      box-shadow: 0 6px 12px rgb(5 150 105 / 0.4);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      user-select: none;
+      border: none;
+    }
+
+    #sendEmailBtn:hover {
+      background: #15803d;
+      box-shadow: 0 8px 16px rgb(5 150 105 / 0.6);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Raw Data Processor</h1>
+  <p>Paste your data here, one line per entry, in the format:</p>
+  <pre>BGTeams (separated by ;) [TAB or multiple spaces] PropertyGroup</pre>
+  <p>Example:</p>
+  <pre>=Test1; =Test2; =Test3	Azure Compute EMEA
+=Test10; =Test11; =Test12	Exchange</pre>
+
+  <textarea id="inputData" placeholder="Paste your data here..."></textarea>
+
+  <div class="button-row">
+    <button class="btn" onclick="processData()">Process Data</button>
+    <button class="btn btn-secondary" onclick="copyOutput()">Copy Result</button>
+  </div>
+
+  <h2>Result:</h2>
+  <div id="output" aria-live="polite" aria-atomic="true"></div>
+
+  <div id="sendEmailContainer">
+    <button id="sendEmailBtn" onclick="sendEmails()">Send Email</button>
+  </div>
+
+  <script>
+    let groupDataGlobal = {};
+
+    function processData() {
+      const input = document.getElementById('inputData').value.trim();
+      const outputDiv = document.getElementById('output');
+      outputDiv.innerHTML = '';
+      groupDataGlobal = {};
+
+      if (!input) {
+        alert('Please paste some data.');
+        return;
+      }
+
+      const lines = input.split('\n');
+
+      lines.forEach(line => {
+        const parts = line.split(/\t+|\s{2,}/);
+        if (parts.length < 2) return;
+
+        const bgTeamRaw = parts[0].trim();
+        const propertyGroup = parts[1].trim();
+
+        if (!propertyGroup || !bgTeamRaw) return;
+
+        if (!groupDataGlobal[propertyGroup]) {
+          groupDataGlobal[propertyGroup] = new Set();
+        }
+
+        const values = bgTeamRaw.split(';');
+        values.forEach(val => {
+          const clean = val.trim().replace(/^=/, '');
+          if (clean) {
+            groupDataGlobal[propertyGroup].add(clean.toLowerCase() + '@microsoft.com');
+          }
+        });
+      });
+
+      if (Object.keys(groupDataGlobal).length === 0) {
+        outputDiv.textContent = 'No valid data found.';
+        return;
+      }
+
+      for (const group in groupDataGlobal) {
+        const emails = Array.from(groupDataGlobal[group]).sort();
+        const groupDiv = document.createElement('div');
+        groupDiv.classList.add('group');
+
+        const label = document.createElement('label');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = true;
+        checkbox.value = group;
+        checkbox.classList.add('group-checkbox');
+
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(group));
+        groupDiv.appendChild(label);
+
+        const emailsDiv = document.createElement('div');
+        emailsDiv.classList.add('emails');
+        emailsDiv.textContent = emails.join('\n');
+        groupDiv.appendChild(emailsDiv);
+
+        outputDiv.appendChild(groupDiv);
+      }
+    }
+
+    function sendEmails() {
+      const checkboxes = document.querySelectorAll('.group-checkbox:checked');
+      if (checkboxes.length === 0) {
+        alert('Please select at least one group to send emails.');
+        return;
+      }
+
+      checkboxes.forEach(cb => {
+        const group = cb.value;
+        const emails = Array.from(groupDataGlobal[group]);
+        if (emails.length === 0) return;
+
+        const mailto = `mailto:${emails.join(',')}` +
+          `?subject=${encodeURIComponent('Group: ' + group)}` +
+          `&body=${encodeURIComponent('Hello ' + group + ' team,\n\n')}`;
+
+        window.open(mailto);
+      });
+    }
+
+    function copyOutput() {
+      if (!groupDataGlobal || Object.keys(groupDataGlobal).length === 0) {
+        alert('No result to copy. Please process data first.');
+        return;
+      }
+      const outputDiv = document.getElementById('output');
+      const textToCopy = Array.from(document.querySelectorAll('.group')).map(g => {
+        const groupName = g.querySelector('label').textContent.trim();
+        const emails = g.querySelector('.emails').textContent.trim();
+        return `${groupName}:\n${emails}\n`;
+      }).join('\n');
+
+      navigator.clipboard.writeText(textToCopy.trim())
+        .then(() => alert('Result copied to clipboard!'))
+        .catch(() => alert('Failed to copy. Please try manually.'));
+    }
+  </script>
+
+</body>
+</html>
