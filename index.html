@@ -139,7 +139,7 @@
       font-size: 14px;
       color: var(--dark-blue);
       box-shadow: 0 6px 16px rgba(30, 64, 175, 0.08);
-      max-height: 400px;
+      max-height: 600px;
       overflow-y: auto;
     }
 
@@ -159,6 +159,20 @@
       cursor: pointer;
     }
 
+    .group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toggle-btn {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
     .emails {
       margin-left: 28px;
       margin-top: 8px;
@@ -166,6 +180,7 @@
       white-space: pre-wrap;
       line-height: 1.5;
       font-size: 13px;
+      display: none;
     }
 
     #emailBodyContainer {
@@ -195,6 +210,22 @@
       box-shadow: 0 8px 16px rgba(5, 150, 105, 0.5);
     }
 
+    .select-toggle-btn {
+      margin-bottom: 20px;
+      background: var(--primary);
+      color: white;
+      padding: 8px 18px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .select-toggle-btn:hover {
+      background: #1e40af;
+    }
+
     h2 {
       font-size: 1.4rem;
       color: var(--primary);
@@ -216,21 +247,19 @@
       <h1>CE Agent</h1>
     </div>
 
-<div id="exampleToggle" style="text-align: right; margin-bottom: 10px;">
-  <button onclick="toggleExample()" style="background: none; border: none; color: var(--primary); cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
-    <span style="font-size: 1.2rem;">ℹ️</span> Show example
-  </button>
-</div>
+    <div id="exampleToggle" style="text-align: right; margin-bottom: 10px;">
+      <button onclick="toggleExample()" style="background: none; border: none; color: var(--primary); cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+        <span style="font-size: 1.2rem;">ℹ️</span> Show example
+      </button>
+    </div>
 
-<div id="exampleContent" style="display: none; margin-bottom: 20px;">
-  <p><strong>Expected format:</strong> BGTeams (separated by `;`) followed by a tab or at least two spaces, then the property group.</p>
-  <pre>=Test1; =Test2; =Test3    Azure Compute EMEA
+    <div id="exampleContent" style="display: none; margin-bottom: 20px;">
+      <p><strong>Expected format:</strong> BGTeams (separated by ;) followed by a tab or at least two spaces, then the property group.</p>
+      <pre>=Test1; =Test2; =Test3    Azure Compute EMEA
 =Test10; =Test11; =Test12    Exchange</pre>
-</div>
+    </div>
 
-<textarea id="inputData" placeholder="Paste your data here..."></textarea>
-
-
+    <textarea id="inputData" placeholder="Paste your data here..."></textarea>
 
     <div class="button-row">
       <button class="btn btn-primary" onclick="processData()">Run Script</button>
@@ -252,6 +281,7 @@
 
   <script>
     let groupDataGlobal = {};
+    let allSelected = true;
 
     function processData() {
       const input = document.getElementById('inputData').value.trim();
@@ -293,27 +323,61 @@
         return;
       }
 
+      // Add Select/Deselect Toggle Button
+      const toggleBtn = document.createElement('button');
+      toggleBtn.className = 'select-toggle-btn';
+      toggleBtn.textContent = 'Deselect All';
+      toggleBtn.onclick = function () {
+        allSelected = !allSelected;
+        toggleBtn.textContent = allSelected ? 'Deselect All' : 'Select All';
+        document.querySelectorAll('.group-checkbox').forEach(cb => cb.checked = allSelected);
+      };
+      outputDiv.appendChild(toggleBtn);
+
+      // GROUPS LOOP
       for (const group in groupDataGlobal) {
-        const emails = Array.from(groupDataGlobal[group]).sort();
+        const groupId = group.replace(/\s+/g, '_');
+
         const groupDiv = document.createElement('div');
         groupDiv.classList.add('group');
 
+        const topRow = document.createElement('div');
+        topRow.classList.add('group-header');
+
         const label = document.createElement('label');
+        label.setAttribute('for', `groupCheckbox_${groupId}`);
+
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.checked = true;
         checkbox.value = group;
+        checkbox.id = `groupCheckbox_${groupId}`;
         checkbox.classList.add('group-checkbox');
 
         label.appendChild(checkbox);
         label.appendChild(document.createTextNode(group));
-        groupDiv.appendChild(label);
+
+        const toggleEmailsBtn = document.createElement('button');
+        toggleEmailsBtn.textContent = '👁 Show Emails';
+        toggleEmailsBtn.className = 'toggle-btn';
+        toggleEmailsBtn.onclick = function () {
+          const emailsDiv = document.getElementById(`emails_${groupId}`);
+          const isHidden = emailsDiv.style.display === 'none';
+          emailsDiv.style.display = isHidden ? 'block' : 'none';
+          toggleEmailsBtn.textContent = isHidden ? '🙈 Hide Emails' : '👁 Show Emails';
+        };
+
+        topRow.appendChild(label);
+        topRow.appendChild(toggleEmailsBtn);
+        groupDiv.appendChild(topRow);
 
         const emailsDiv = document.createElement('div');
         emailsDiv.classList.add('emails');
-        emailsDiv.textContent = emails.join('\n');
-        groupDiv.appendChild(emailsDiv);
+        emailsDiv.id = `emails_${groupId}`;
+        emailsDiv.style.display = 'none';
+        emailsDiv.textContent = Array.from(groupDataGlobal[group]).sort().join('\n');
 
+        groupDiv.appendChild(emailsDiv);
         outputDiv.appendChild(groupDiv);
       }
     }
@@ -335,10 +399,7 @@
         const subject = `Group: ${group}`;
         const bodyContent = customBody || `Hello ${group} team,\n\n`;
 
-        const mailto = `mailto:${emails.join(',')}` +
-          `?subject=${encodeURIComponent(subject)}` +
-          `&body=${encodeURIComponent(bodyContent)}`;
-
+        const mailto = `mailto:${emails.join(',')}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyContent)}`;
         window.open(mailto);
       });
     }
@@ -348,12 +409,10 @@
         alert('No result to copy. Please process data first.');
         return;
       }
-      const outputDiv = document.getElementById('output');
-      const textToCopy = Array.from(document.querySelectorAll('.group')).map(g => {
-        const groupName = g.querySelector('label').textContent.trim();
-        const emails = g.querySelector('.emails').textContent.trim();
-        return `${groupName}:\n${emails}\n`;
-      }).join('\n');
+      const textToCopy = Object.entries(groupDataGlobal).map(([group, emailsSet]) => {
+        const emails = Array.from(emailsSet).sort().join('\n');
+        return `${group}:\n${emails}`;
+      }).join('\n\n');
 
       navigator.clipboard.writeText(textToCopy.trim())
         .then(() => alert('Result copied to clipboard!'))
@@ -361,19 +420,17 @@
     }
 
     function toggleExample() {
-  const content = document.getElementById('exampleContent');
-  const button = document.querySelector('#exampleToggle button');
+      const content = document.getElementById('exampleContent');
+      const button = document.querySelector('#exampleToggle button');
 
-  if (content.style.display === 'none') {
-    content.style.display = 'block';
-    button.innerHTML = '<span style="font-size: 1.2rem;">🔽</span> Hide example';
-  } else {
-    content.style.display = 'none';
-    button.innerHTML = '<span style="font-size: 1.2rem;">ℹ️</span> Show example';
-  }
-}
-
-
+      if (content.style.display === 'none') {
+        content.style.display = 'block';
+        button.innerHTML = '<span style="font-size: 1.2rem;">🔽</span> Hide example';
+      } else {
+        content.style.display = 'none';
+        button.innerHTML = '<span style="font-size: 1.2rem;">ℹ️</span> Show example';
+      }
+    }
   </script>
 </body>
 </html>
