@@ -2,188 +2,252 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Raw Data Processor with Selectable Groups</title>
+  <title>CE Agent</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    :root {
+      --primary: #2563eb;
+      --secondary: #4b5563;
+      --accent: #16a34a;
+      --light: #f9fafb;
+      --light-gray: #e5e7eb;
+      --dark-blue: #1e40af;
+    }
 
     body {
       font-family: 'Inter', sans-serif;
-      background: #f9fafb;
-      color: #333;
+      background: var(--light);
+      color: #1f2937;
+      margin: 0;
       padding: 40px 20px;
-      max-width: 800px;
-      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    h1 {
-      text-align: center;
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: #1e40af;
+    .container {
+      max-width: 860px;
+      width: 100%;
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .header img {
+      height: 48px;
+    }
+
+    .header h1 {
+      color: var(--primary);
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin: 0;
     }
 
     p {
       text-align: center;
-      margin-top: 0;
-      margin-bottom: 30px;
       color: #555;
+      margin: 0 0 24px;
       font-size: 1rem;
     }
 
     pre {
-      background: #e5e7eb;
-      padding: 10px 15px;
-      border-radius: 6px;
+      background: var(--light-gray);
+      padding: 10px 16px;
+      border-radius: 8px;
       font-size: 0.9rem;
-      max-width: 100%;
       overflow-x: auto;
       user-select: all;
-      margin: 0 auto 30px auto;
+      margin: 10px auto 30px;
       width: fit-content;
     }
 
     textarea {
       width: 100%;
-      height: 220px;
+      min-height: 160px;
       font-family: monospace;
       font-size: 14px;
       padding: 15px;
-      border-radius: 8px;
-      border: 1px solid #cbd5e1;
-      box-sizing: border-box;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
       resize: vertical;
-      transition: border-color 0.3s ease;
-      margin-bottom: 10px;
+      transition: all 0.25s ease;
     }
 
     textarea:focus {
-      border-color: #2563eb;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px #bfdbfe;
       outline: none;
-      box-shadow: 0 0 6px #93c5fd;
+    }
+
+    .button-row {
+      margin-top: 24px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
     .btn {
-      display: inline-block;
-      background: #2563eb;
-      color: white;
-      border: none;
-      padding: 12px 24px;
+      padding: 12px 20px;
       border-radius: 8px;
       font-weight: 600;
+      font-size: 0.95rem;
+      border: none;
       cursor: pointer;
-      transition: background-color 0.3s ease;
-      user-select: none;
+      transition: background 0.3s ease, transform 0.1s ease;
     }
 
-    .btn:hover {
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
       background: #1d4ed8;
     }
 
     .btn-secondary {
-      background: #4b5563;
+      background: var(--secondary);
+      color: white;
     }
 
     .btn-secondary:hover {
       background: #374151;
     }
 
-    .button-row {
-      margin-bottom: 30px;
-      display: flex;
-      gap: 10px;
-      justify-content: flex-start;
-      flex-wrap: wrap;
-    }
-
     #output {
-      background: #e0e7ff;
-      padding: 25px 30px;
+      background: #eef2ff;
+      padding: 30px;
       margin-top: 30px;
-      border-radius: 12px;
-      border: 1px solid #a5b4fc;
-      min-height: 180px;
+      border-radius: 14px;
+      border: 1px solid #c7d2fe;
       font-family: monospace;
       font-size: 14px;
-      color: #1e40af;
+      color: var(--dark-blue);
+      box-shadow: 0 6px 16px rgba(30, 64, 175, 0.08);
       max-height: 400px;
       overflow-y: auto;
-      box-shadow: 0 4px 10px rgb(29 78 216 / 0.1);
     }
 
     .group {
-      margin-bottom: 22px;
-      border-bottom: 1px solid #bfcffd;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #dbeafe;
       padding-bottom: 14px;
     }
 
     .group label {
       font-weight: 600;
-      cursor: pointer;
+      font-size: 1.1rem;
+      color: var(--dark-blue);
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 1.15rem;
-      user-select: none;
-      color: #1e40af;
+      cursor: pointer;
     }
 
     .emails {
       margin-left: 28px;
       margin-top: 8px;
-      color: #2c5282;
+      color: #334155;
       white-space: pre-wrap;
-      font-family: monospace;
+      line-height: 1.5;
       font-size: 13px;
-      line-height: 1.4;
-      letter-spacing: 0.02em;
     }
 
-    /* Send Email button container below output */
+    #emailBodyContainer {
+      margin-top: 30px;
+    }
+
     #sendEmailContainer {
-      margin-top: 20px;
+      margin-top: 24px;
       text-align: center;
     }
 
     #sendEmailBtn {
-      background: #16a34a;
+      background: var(--accent);
+      color: white;
       padding: 14px 36px;
+      border: none;
+      font-weight: 700;
       font-size: 1.1rem;
       border-radius: 10px;
-      font-weight: 700;
-      box-shadow: 0 6px 12px rgb(5 150 105 / 0.4);
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
-      user-select: none;
-      border: none;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 6px 12px rgba(5, 150, 105, 0.3);
     }
 
     #sendEmailBtn:hover {
       background: #15803d;
-      box-shadow: 0 8px 16px rgb(5 150 105 / 0.6);
+      box-shadow: 0 8px 16px rgba(5, 150, 105, 0.5);
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      color: var(--primary);
+      margin-top: 40px;
+    }
+
+    label[for="customEmailBody"] {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 10px;
+      color: #1f2937;
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <div class="header">
+      <img src="logoc.png" alt="Logo">
+      <h1>CE Agent</h1>
+    </div>
 
-  <h1>Raw Data Processor</h1>
-  <p>Paste your data here, one line per entry, in the format:</p>
-  <pre>BGTeams (separated by ;) [TAB or multiple spaces] PropertyGroup</pre>
-  <p>Example:</p>
-  <pre>=Test1; =Test2; =Test3	Azure Compute EMEA
-=Test10; =Test11; =Test12	Exchange</pre>
+<div id="exampleToggle" style="text-align: right; margin-bottom: 10px;">
+  <button onclick="toggleExample()" style="background: none; border: none; color: var(--primary); cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+    <span style="font-size: 1.2rem;">ℹ️</span> Show example
+  </button>
+</div>
 
-  <textarea id="inputData" placeholder="Paste your data here..."></textarea>
+<div id="exampleContent" style="display: none; margin-bottom: 20px;">
+  <p><strong>Expected format:</strong> BGTeams (separated by `;`) followed by a tab or at least two spaces, then the property group.</p>
+  <pre>=Test1; =Test2; =Test3    Azure Compute EMEA
+=Test10; =Test11; =Test12    Exchange</pre>
+</div>
 
-  <div class="button-row">
-    <button class="btn" onclick="processData()">Process Data</button>
-    <button class="btn btn-secondary" onclick="copyOutput()">Copy Result</button>
-  </div>
+<textarea id="inputData" placeholder="Paste your data here..."></textarea>
 
-  <h2>Result:</h2>
-  <div id="output" aria-live="polite" aria-atomic="true"></div>
 
-  <div id="sendEmailContainer">
-    <button id="sendEmailBtn" onclick="sendEmails()">Send Email</button>
+
+    <div class="button-row">
+      <button class="btn btn-primary" onclick="processData()">Run Script</button>
+      <button class="btn btn-secondary" onclick="copyOutput()">Copy Result</button>
+    </div>
+
+    <h2>Result:</h2>
+    <div id="output" aria-live="polite" aria-atomic="true"></div>
+
+    <div id="emailBodyContainer">
+      <label for="customEmailBody">Custom email body:</label>
+      <textarea id="customEmailBody" placeholder="Write your message here..." style="height: 120px;"></textarea>
+    </div>
+
+    <div id="sendEmailContainer">
+      <button id="sendEmailBtn" onclick="sendEmails()">Send Email</button>
+    </div>
   </div>
 
   <script>
@@ -261,14 +325,19 @@
         return;
       }
 
+      const customBody = document.getElementById('customEmailBody').value.trim();
+
       checkboxes.forEach(cb => {
         const group = cb.value;
         const emails = Array.from(groupDataGlobal[group]);
         if (emails.length === 0) return;
 
+        const subject = `Group: ${group}`;
+        const bodyContent = customBody || `Hello ${group} team,\n\n`;
+
         const mailto = `mailto:${emails.join(',')}` +
-          `?subject=${encodeURIComponent('Group: ' + group)}` +
-          `&body=${encodeURIComponent('Hello ' + group + ' team,\n\n')}`;
+          `?subject=${encodeURIComponent(subject)}` +
+          `&body=${encodeURIComponent(bodyContent)}`;
 
         window.open(mailto);
       });
@@ -290,7 +359,21 @@
         .then(() => alert('Result copied to clipboard!'))
         .catch(() => alert('Failed to copy. Please try manually.'));
     }
-  </script>
 
+    function toggleExample() {
+  const content = document.getElementById('exampleContent');
+  const button = document.querySelector('#exampleToggle button');
+
+  if (content.style.display === 'none') {
+    content.style.display = 'block';
+    button.innerHTML = '<span style="font-size: 1.2rem;">🔽</span> Hide example';
+  } else {
+    content.style.display = 'none';
+    button.innerHTML = '<span style="font-size: 1.2rem;">ℹ️</span> Show example';
+  }
+}
+
+
+  </script>
 </body>
 </html>
