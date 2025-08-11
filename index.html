@@ -1,11 +1,14 @@
+
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>CE Agent</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+<meta charset="utf-8"/>
+<title>CE Agent</title>
 
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
     :root {
       --primary: #2563eb;
       --secondary: #4b5563;
@@ -13,424 +16,1538 @@
       --light: #f9fafb;
       --light-gray: #e5e7eb;
       --dark-blue: #1e40af;
+      --gradient-light: linear-gradient(120deg, #e8f0fe 0%, #f3f6fb 60%, #e0e7ff 100%);
+      --gradient-dark: linear-gradient(120deg, #23262f 0%, #232b3b 60%, #1a1c22 100%);
+      --dark-bg: #181a20;
+      --dark-container: #23262f;
+      --dark-text: #e5e7eb;
+      --dark-border: #313442;
+      --dark-accent: #22d3ee;
+      --dark-btn: #2563eb;
+      --dark-btn-hover: #1e40af;
+      --dark-secondary: #a1a1aa;
     }
-
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--light);
-      color: #1f2937;
+      /* Placeholders plus visibles */
+      ::placeholder {
+        color: #3b4252;
+        opacity: 1;
+        font-weight: 500;
+        font-style: italic;
+        font-size: 0.93em;
+        letter-spacing: 0.01em;
+      }
+      :-ms-input-placeholder { color: #3b4252; opacity: 1; font-weight: 500; font-style: italic; font-size: 0.93em; }
+      ::-ms-input-placeholder { color: #3b4252; opacity: 1; font-weight: 500; font-style: italic; font-size: 0.93em; }
+      /* Dark mode placeholders - plus blanc et plus contrasté */
+      &.dark-mode ::placeholder {
+        color: #a3adc2;
+        opacity: 1;
+        font-weight: 500;
+        font-size: 0.93em;
+        font-style: italic;
+        letter-spacing: 0.01em;
+        text-shadow: none;
+      }
+      &.dark-mode :-ms-input-placeholder { color: #a3adc2; opacity: 1; font-weight: 500; font-size: 0.93em; font-style: italic; }
+      &.dark-mode ::-ms-input-placeholder { color: #a3adc2; opacity: 1; font-weight: 500; font-size: 0.93em; font-style: italic; }
+      font-family: 'Segoe UI Variable', 'Segoe UI', 'Inter', Arial, sans-serif;
+      background: var(--gradient-light);
+      color: #222b3a;
       margin: 0;
       padding: 40px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      transition: background 0.3s, color 0.3s;
     }
-
+    body.dark-mode {
+      background: var(--gradient-dark);
+      color: #e5e7eb;
+    }
     .container {
-      max-width: 860px;
+      max-width: 900px;
       width: 100%;
-      background: white;
-      padding: 40px;
-      border-radius: 16px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+      background: rgba(255,255,255,0.82);
+      padding: 44px 44px 32px 44px;
+      border-radius: 28px;
+      box-shadow: 0 8px 32px 0 rgba(0,0,0,0.10), 0 1.5px 8px 0 rgba(37,99,235,0.07);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid #e3e7f0;
+      transition: background 0.3s, color 0.3s, box-shadow 0.3s;
     }
-
+    body.dark-mode .container {
+      background: rgba(35,38,47,0.92);
+      color: #e5e7eb;
+      box-shadow: 0 8px 32px 0 #000a, 0 1.5px 8px 0 #22d3ee22;
+      border: 1.5px solid #313442;
+    }
     .header {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 18px;
+      margin-bottom: 36px;
     }
-
     .header img {
-      height: 48px;
+      height: 54px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px #0001;
     }
-
     .header h1 {
-      color: var(--primary);
-      font-size: 2.2rem;
-      font-weight: 700;
+      color: #2563eb;
+      font-size: 2.5rem;
+      font-weight: 800;
       margin: 0;
+      letter-spacing: -1.5px;
+      text-shadow: 0 2px 8px #2563eb11;
     }
-
-    p {
-      text-align: center;
-      color: #555;
-      margin: 0 0 24px;
-      font-size: 1rem;
+    label {
+    /* Required asterisk for required fields */
+    label.required::after {
+      content: ' *';
+      color: #dc2626;
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-left: 2px;
+      vertical-align: middle;
     }
-
-    pre {
-      background: var(--light-gray);
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      overflow-x: auto;
-      user-select: all;
-      margin: 10px auto 30px;
-      width: fit-content;
+    .input-error {
+      border: 2px solid #dc2626 !important;
+      background: #fef2f2 !important;
+      color: #b91c1c !important;
     }
-
-    textarea {
-      width: 100%;
-      min-height: 160px;
-      font-family: monospace;
-      font-size: 14px;
-      padding: 15px;
-      border-radius: 10px;
-      border: 1px solid #d1d5db;
-      resize: vertical;
-      transition: all 0.25s ease;
+    body.dark-mode .input-error {
+      border: 2px solid #dc2626 !important;
+      background: #2a1a1a !important;
+      color: #fca5a5 !important;
     }
-
-    textarea:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px #bfdbfe;
-      outline: none;
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-4px); }
+      100% { transform: translateX(0); }
     }
-
-    .button-row {
-      margin-top: 24px;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      padding: 12px 20px;
-      border-radius: 8px;
       font-weight: 600;
-      font-size: 0.95rem;
-      border: none;
+      display: block;
+      margin-top: 18px;
+      font-size: 1.08em;
+      color: #2563eb;
+      letter-spacing: 0.01em;
+    }
+      textarea, input[type="text"], input[type="date"], input[type="datetime-local"] {
+        width: 100%;
+        font-family: 'Segoe UI Variable', 'Segoe UI', 'Inter', Arial, sans-serif;
+        font-size: 1.08em;
+        font-weight: 600;
+        color: #18181b;
+        letter-spacing: 0.01em;
+        padding: 13px;
+        border-radius: 10px;
+        border: 1.5px solid #a5b4fc;
+        margin-top: 10px;
+        margin-bottom: 0px;
+        box-shadow: 0 2px 8px rgba(37,99,235,0.07);
+        transition: border 0.2s, box-shadow 0.2s, background 0.2s, color 0.2s;
+        box-sizing: border-box;
+        background: #f8fafc;
+        box-shadow: 0 2px 8px #2563eb08;
+      }
+      textarea::selection, input[type="text"]::selection, input[type="date"]::selection, input[type="datetime-local"]::selection {
+        background: #dbeafe;
+        color: #1e293b;
+      }
+      body.dark-mode textarea,
+      body.dark-mode input[type="text"],
+      body.dark-mode input[type="date"],
+      body.dark-mode input[type="datetime-local"] {
+        color: #f3f4f6;
+        background: #23262f;
+        font-weight: 600;
+        font-size: 1.08em;
+      }
+
+      textarea:focus, input[type="text"]:focus, input[type="date"]:focus, input[type="datetime-local"]:focus {
+        border: 2.5px solid #2563eb;
+        outline: none;
+        box-shadow: 0 0 0 3px #93c5fd55;
+        background: #f3f6fb;
+      }
+    body.dark-mode textarea,
+    body.dark-mode input[type="text"],
+    body.dark-mode input[type="date"],
+    body.dark-mode input[type="datetime-local"] {
+      background: #23262f;
+      color: #e5e7eb;
+      border: 1.5px solid #22d3ee55;
+      box-shadow: 0 2px 8px #22d3ee11;
+    }
+    body.dark-mode textarea {
+      background: #23262f;
+      color: var(--dark-text);
+      border: 1.5px solid var(--dark-border);
+      box-shadow: 0 2px 8px rgba(34,211,238,0.04);
+    }
+    body.dark-mode textarea:focus, body.dark-mode input[type="text"]:focus, body.dark-mode input[type="date"]:focus, body.dark-mode input[type="datetime-local"]:focus {
+      border: 2.5px solid #22d3ee;
+      box-shadow: 0 0 0 3px #22d3ee55;
+      background: #23262f;
+    }
+    input[type="file"] {
+      display: none;
+    }
+    .custom-file {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(90deg, #f8fafc 60%, #e0e7ff 100%);
+      padding: 15px 26px;
+      border-radius: 14px;
       cursor: pointer;
-      transition: background 0.3s ease, transform 0.1s ease;
+      border: 2px solid #a5b4fc;
+      transition: background 0.22s, border 0.22s, color 0.22s, box-shadow 0.22s;
+      margin-top: 12px;
+      font-size: 0.97em;
+      font-weight: 500;
+      color: #2563eb;
+      box-shadow: 0 2px 12px #2563eb11, 0 1.5px 8px #2563eb07;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Segoe UI Variable', 'Segoe UI', 'Inter', Arial, sans-serif;
+      letter-spacing: 0.01em;
     }
-
-    .btn:active {
-      transform: scale(0.98);
+    .custom-file:hover {
+      background: linear-gradient(90deg, #e0e7ff 60%, #f8fafc 100%);
+      border-color: #2563eb;
+      color: #2563eb;
+      box-shadow: 0 4px 16px #2563eb22;
     }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
+    .custom-file input[type="file"] {
+      position: absolute;
+      left: 0; top: 0; width: 100%; height: 100%;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 2;
     }
-
-    .btn-primary:hover {
-      background: #1d4ed8;
+    .custom-file span {
+      font-size: 0.97em;
+      color: #000 !important;
+      color: #fff !important;
+      font-weight: 500;
+      font-family: 'Segoe UI Variable', 'Segoe UI', 'Inter', Arial, sans-serif;
+      z-index: 1;
+      pointer-events: none;
     }
-
-    .btn-secondary {
-      background: var(--secondary);
-      color: white;
+    
+    body.dark-mode .custom-file {
+      background: linear-gradient(90deg, #23262f 60%, #313442 100%);
+      border: 2px solid #22d3ee;
+      color: #eaf6ff;
+      box-shadow: 0 2px 12px #22d3ee22, 0 1.5px 8px #22d3ee11;
     }
-
-    .btn-secondary:hover {
-      background: #374151;
+    body.dark-mode .custom-file:hover {
+      background: linear-gradient(90deg, #313442 60%, #23262f 100%);
+      border-color: #22d3ee;
+      color: #22d3ee;
+      box-shadow: 0 4px 16px #22d3ee44;
     }
-
+    .custom-file:hover {
+      background: #e0e7ff;
+    }
+    .custom-file span {
+      font-size: 1em;
+      color: #eaf6ff;
+      font-weight: 600;
+      font-family: 'Segoe UI Variable', 'Segoe UI', 'Inter', Arial, sans-serif;
+    }
+    .input-2x2 {
+      display: grid;
+      grid-template-columns: 48% 48%;
+      gap: 4%;
+      margin-top: 20px;
+    }
+    .btn {
+      background: linear-gradient(90deg, #2563eb 60%, #4f8cff 100%);
+      color: #fff;
+      padding: 13px 32px;
+      border: none;
+      font-weight: 700;
+      font-size: 1.08em;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: background 0.22s, box-shadow 0.22s, transform 0.12s;
+      box-shadow: 0 2px 8px #2563eb22;
+      margin-top: 20px;
+      letter-spacing: 0.01em;
+    }
+    body.dark-mode .btn {
+      background: linear-gradient(90deg, #23262f 60%, #2563eb 100%);
+      color: #fff;
+      box-shadow: 0 2px 8px #22d3ee33;
+    }
+    body.dark-mode .btn:hover {
+      background: linear-gradient(90deg, #2563eb 60%, #23262f 100%);
+    }
+    .btn:hover {
+      background: linear-gradient(90deg, #4f8cff 60%, #2563eb 100%);
+      color: #fff;
+      box-shadow: 0 4px 16px #2563eb33;
+      transform: scale(1.04);
+    }
     #output {
       background: #eef2ff;
-      padding: 30px;
-      margin-top: 30px;
-      border-radius: 14px;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 12px;
       border: 1px solid #c7d2fe;
       font-family: monospace;
       font-size: 14px;
       color: var(--dark-blue);
-      box-shadow: 0 6px 16px rgba(30, 64, 175, 0.08);
-      max-height: 600px;
-      overflow-y: auto;
+      transition: background 0.3s, color 0.3s;
     }
-
-    .group {
-      margin-bottom: 20px;
-      border-bottom: 1px solid #dbeafe;
-      padding-bottom: 14px;
+    body.dark-mode #output {
+      background: #23262f;
+      color: var(--dark-text);
+      border: 1px solid var(--dark-border);
     }
-
-    .group label {
-      font-weight: 600;
-      font-size: 1.1rem;
+    #output label,
+    .group-header label {
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 1.18em;
       color: var(--dark-blue);
+      margin-bottom: 0;
+      margin-right: 12px;
+      display: inline-block;
+      vertical-align: middle;
+    .group-header {
       display: flex;
       align-items: center;
       gap: 10px;
-      cursor: pointer;
+      padding: 7px 0 7px 0;
     }
-
-    .group-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .group-header input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--primary);
+      margin-right: 8px;
+      margin-left: 2px;
+      vertical-align: middle;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+      border-radius: 5px;
+      border: 1.5px solid #cbd5e1;
+      transition: border 0.2s, box-shadow 0.2s;
     }
-
-    .toggle-btn {
+    .group-header .btn-showhide {
+      margin-left: auto;
+      font-size: 1em;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 8px;
+      background: #f3f4f6;
+      color: var(--primary);
+      border: 1.5px solid #cbd5e1;
+      transition: background 0.2s, color 0.2s, border 0.2s;
+    }
+    .group-header .btn-showhide:hover {
+      background: #e0e7ff;
+      color: #1e40af;
+      border: 1.5px solid var(--primary);
+    }
+    body.dark-mode .group-header label {
+      color: #fff;
+      text-shadow: 0 1px 4px #000a, 0 0px 1px #22d3ee;
+    }
+    body.dark-mode .group-header input[type="checkbox"] {
+      accent-color: #22d3ee;
+      border: 1.5px solid #22d3ee;
+      background: #23262f;
+      box-shadow: 0 1px 3px #22d3ee33;
+    }
+    body.dark-mode .group-header .btn-showhide {
+      background: #23262f;
+      color: #22d3ee;
+      border: 1.5px solid #22d3ee;
+      text-shadow: 0 1px 4px #000a;
+    }
+    body.dark-mode .group-header .btn-showhide:hover {
+      background: #1e293b;
+      color: #fff;
+      border: 1.5px solid #fff;
+    }
+    }
+    body.dark-mode #output label,
+    body.dark-mode .group-header label {
+      color: var(--dark-accent);
+    }
+      .emails {
+        white-space: pre-wrap;
+        font-size: 1.09em;
+        margin-bottom: 10px;
+        display: none;
+        font-family: 'Segoe UI Variable', 'Segoe UI', 'Inter', Arial, sans-serif;
+        color: #23262f;
+        font-weight: 500;
+        background: #f4f7fd;
+        border-radius: 8px;
+        padding: 10px 16px 10px 18px;
+        line-height: 1.7;
+        box-shadow: 0 2px 8px #2563eb11;
+        letter-spacing: 0.01em;
+        text-align: left;
+        transition: background 0.2s, color 0.2s;
+      }
+      .emails span.email-item {
+        display: block;
+        padding: 3px 0 3px 0;
+        border-radius: 5px;
+        transition: background 0.18s, color 0.18s;
+        cursor: pointer;
+      }
+      .emails span.email-item:hover {
+        background: #e0e7ff;
+        color: #2563eb;
+      }
+      body.dark-mode .emails {
+        color: #e5e7eb;
+        background: #23262f;
+        box-shadow: 0 2px 8px #22d3ee22;
+      }
+      body.dark-mode .emails span.email-item:hover {
+        background: #1e293b;
+        color: #22d3ee;
+      }
+    .btn-showhide {
       background: none;
       border: none;
       color: var(--primary);
-      font-size: 0.9rem;
+      font-size: 1em;
+      font-weight: 600;
       cursor: pointer;
+      outline: none;
+      margin-left: 10px;
+      padding: 0 8px;
+      transition: color 0.2s;
     }
-
-    .emails {
-      margin-left: 28px;
-      margin-top: 8px;
-      color: #334155;
-      white-space: pre-wrap;
-      line-height: 1.5;
-      font-size: 13px;
-      display: none;
+    body.dark-mode .btn-showhide {
+      color: var(--dark-accent);
     }
-
-    #emailBodyContainer {
-      margin-top: 30px;
+    .btn-showhide:hover {
+      color: #1e40af;
     }
-
-    #sendEmailContainer {
-      margin-top: 24px;
-      text-align: center;
-    }
-
-    #sendEmailBtn {
+    #downloadEmlBtn {
       background: var(--accent);
       color: white;
-      padding: 14px 36px;
-      border: none;
-      font-weight: 700;
-      font-size: 1.1rem;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 6px 12px rgba(5, 150, 105, 0.3);
     }
-
-    #sendEmailBtn:hover {
+    body.dark-mode #downloadEmlBtn {
+      background: var(--dark-accent);
+      color: #23262f;
+    }
+    #downloadEmlBtn:hover {
       background: #15803d;
-      box-shadow: 0 8px 16px rgba(5, 150, 105, 0.5);
     }
-
-    .select-toggle-btn {
-      margin-bottom: 20px;
-      background: var(--primary);
+    body.dark-mode #downloadEmlBtn:hover {
+      background: #0891b2;
+    }
+    #toggleSelectBtn {
+      background: var(--accent);
       color: white;
-      padding: 8px 18px;
-      font-weight: 600;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease;
+      transition: background 0.2s;
     }
+    body.dark-mode #toggleSelectBtn {
+      background: var(--dark-accent);
+      color: #23262f;
+    }
+    #toggleSelectBtn.deselect {
+      background: #dc2626;
+      color: white;
+    }
+    body.dark-mode #toggleSelectBtn.deselect {
+      background: #b91c1c;
+      color: #fff;
+    }
+    #toggleSelectBtn.deselect:hover {
+      background: #b91c1c;
+    }
+    body.dark-mode #toggleSelectBtn.deselect:hover {
+      background: #7f1d1d;
+    }
+    .hidden {
+      display: none !important;
+    }
+    #describeInput:focus {
+      border: 2px solid var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 2px #93c5fd;
+    }
+    body.dark-mode #describeInput:focus {
+      border: 2px solid var(--dark-accent);
+      box-shadow: 0 0 0 2px #22d3ee;
+    }
+    input[type="datetime-local"] {
+      background: #f8fafc;
+      border: 1.5px solid #a5b4fc;
+      font-size: 15px;
+      padding: 14px 14px;
+      border-radius: 12px;
+      color: #1e293b;
+      margin-top: 10px;
+      margin-bottom: 2px;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.04);
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+    body.dark-mode input[type="datetime-local"] {
+      background: #23262f;
+      color: var(--dark-text);
+      border: 1.5px solid var(--dark-accent);
+      box-shadow: 0 2px 8px rgba(34,211,238,0.04);
+    }
+    input[type="datetime-local"]:focus {
+      border: 2px solid var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 2px #93c5fd;
+    }
+    /* Harmonisation placeholders day1/day2 */
+input[type="datetime-local"]::placeholder {
+  color: #3b4252;
+  opacity: 1;
+  font-weight: 500;
+  font-style: italic;
+  font-size: 0.93em;
+  letter-spacing: 0.01em;
+}
+body.dark-mode input[type="datetime-local"]::placeholder {
+  color: #a3adc2;
+  opacity: 1;
+  font-weight: 500;
+  font-style: italic;
+  font-size: 0.93em;
+  letter-spacing: 0.01em;
+}
+    .settings-fab {
+        position: fixed;
+        top: 22px;
+        right: 38px;
+        z-index: 120;
+        background: linear-gradient(120deg, #f3f6fb 0%, #e7eaf3 100%);
+        border-radius: 50%;
+        box-shadow: 0 2px 12px #2563eb11, 0 1.5px 8px #2563eb07;
+        border: 1.5px solid #e3e7f0;
+        width: 54px;
+        height: 54px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.2s, box-shadow 0.2s;
+      }
+      .settings-fab:hover, .settings-fab:focus {
+        background: #e0e7ff;
+        box-shadow: 0 4px 16px #2563eb22;
+        outline: none;
+      }
+      body.dark-mode .settings-fab {
+        background: linear-gradient(120deg, #23262f 0%, #1a1c22 100%);
+        border: 1.5px solid #313442;
+        box-shadow: 0 2px 12px #22d3ee22, 0 1.5px 8px #22d3ee11;
+      }
+      .settings-menu {
+        position: fixed;
+        top: 84px;
+        right: 38px;
+        z-index: 130;
+        background: rgba(255,255,255,0.98);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px #2563eb22, 0 1.5px 8px #2563eb07;
+        border: 1.5px solid #e3e7f0;
+        padding: 18px 22px 14px 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-width: 210px;
+        animation: settingsMenuIn 0.22s cubic-bezier(.4,1.4,.6,1);
+      }
+      @keyframes settingsMenuIn {
+        from { opacity: 0; transform: translateY(-18px) scale(0.98); }
+        to { opacity: 1; transform: none; }
+      }
+      body.dark-mode .settings-menu {
+        background: rgba(35,38,47,0.99);
+        border: 1.5px solid #313442;
+        box-shadow: 0 8px 32px #22d3ee33, 0 1.5px 8px #22d3ee11;
+      }
+      .settings-menu-btn {
+        min-width: 0;
+        width: 100%;
+        padding: 11px 12px;
+        font-size: 1.08em;
+        border-radius: 12px;
+        background: none;
+        box-shadow: none;
+        color: #2563eb;
+        background: transparent;
+        border: none;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background 0.18s, color 0.18s;
+        justify-content: flex-start;
+      }
+      .settings-menu-btn:hover, .settings-menu-btn:focus {
+        background: #e0e7ff;
+        color: #1e40af;
+        outline: none;
+      }
+      body.dark-mode .settings-menu-btn {
+        color: #22d3ee;
+      }
+      body.dark-mode .settings-menu-btn:hover, body.dark-mode .settings-menu-btn:focus {
+        background: #23262f;
+        color: #fff;
+      }
+      @media (max-width: 700px) {
+        .settings-fab {
+          right: 10px;
+          top: 10px;
+          width: 44px;
+          height: 44px;
+        }
+        .settings-menu {
+          right: 6px;
+          top: 62px;
+          min-width: 160px;
+          padding: 10px 7px 8px 7px;
+        }
+      }
+  
 
-    .select-toggle-btn:hover {
-      background: #1e40af;
-    }
+  .custom-file span { color: #000 !important; }
+  body.dark-mode .custom-file span { color: #fff !important; }
 
-    h2 {
-      font-size: 1.4rem;
-      color: var(--primary);
-      margin-top: 40px;
-    }
 
-    label[for="customEmailBody"] {
-      font-weight: 600;
-      display: block;
-      margin-bottom: 10px;
-      color: #1f2937;
+      .top-buttons-bar {
+        position: fixed;
+        top: 22px;
+        right: 38px;
+        z-index: 100;
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        align-items: center;
+        background: rgba(255,255,255,0.85);
+        border-radius: 18px;
+        box-shadow: 0 2px 12px #2563eb11, 0 1.5px 8px #2563eb07;
+        padding: 7px 18px 7px 14px;
+        border: 1.5px solid #e3e7f0;
+        transition: background 0.3s, box-shadow 0.3s;
+      }
+      body.dark-mode .top-buttons-bar {
+        background: rgba(35,38,47,0.97);
+        border: 1.5px solid #313442;
+        box-shadow: 0 2px 12px #22d3ee22, 0 1.5px 8px #22d3ee11;
+      }
+      .top-btn {
+        min-width: 38px;
+        padding: 7px 14px;
+        font-size: 1.15em;
+        border-radius: 12px;
+        background: none;
+        box-shadow: none;
+        color: #2563eb;
+        background: transparent;
+        border: none;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: background 0.18s, color 0.18s;
+      }
+      .top-btn:hover, .top-btn:focus {
+        background: #e0e7ff;
+        color: #1e40af;
+        outline: none;
+      }
+      body.dark-mode .top-btn {
+        color: #22d3ee;
+      }
+      body.dark-mode .top-btn:hover, body.dark-mode .top-btn:focus {
+        background: #23262f;
+        color: #fff;
+      }
+      @media (max-width: 700px) {
+        .top-buttons-bar {
+          right: 10px;
+          top: 10px;
+          padding: 5px 7px 5px 7px;
+        }
+        .top-btn {
+          font-size: 1em;
+          padding: 6px 8px;
+        }
+      }
+      /* Animations & transitions */
+      .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInSlideUp 0.45s cubic-bezier(.4,1.4,.6,1) forwards;
+      }
+      @keyframes fadeInSlideUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .slide-toggle {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: max-height 0.35s cubic-bezier(.4,1.4,.6,1), opacity 0.35s cubic-bezier(.4,1.4,.6,1);
+      }
+      .slide-toggle.open {
+        max-height: 300px;
+        opacity: 1;
+      }
+      .emails.slide-toggle.open {
+        max-height: 320px;
+        overflow-y: auto;
+        box-shadow: 0 2px 12px #2563eb22;
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding-right: 8px;
+      }
+      body.dark-mode .emails.slide-toggle.open {
+        background: #23262f;
+        border: 1px solid #313442;
+      }
+      .btn {
+        transition: background 0.3s, box-shadow 0.3s, transform 0.12s;
+      }
+      .btn:active {
+        transform: scale(0.96);
+        box-shadow: 0 2px 8px rgba(37,99,235,0.10);
+      }
+      .btn:hover {
+        transform: scale(1.04);
+      }
+      body, .container {
+        transition: background 0.4s cubic-bezier(.4,1.4,.6,1), color 0.4s cubic-bezier(.4,1.4,.6,1);
+      }
+      /* Loader */
+      .loader {
+        border: 3px solid #e5e7eb;
+        border-top: 3px solid var(--primary);
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        animation: spin 0.8s linear infinite;
+        margin: 30px auto 20px auto;
+        display: block;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    
+
+      .add-day2-btn {
+        grid-column: 1 / span 2;
+        margin-top: 10px;
+        margin-bottom: 0;
+        padding: 6px 16px;
+        font-size: 0.98em;
+        font-weight: 600;
+        background: linear-gradient(90deg, #f3f4f6 60%, #e0e7ff 100%);
+        color: #1e293b;
+        border: 1.5px solid #a5b4fc;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px #2563eb11;
+        letter-spacing: 0.01em;
+        transition: background 0.2s, color 0.2s, border 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .add-day2-btn:hover {
+        background: linear-gradient(90deg, #e0e7ff 60%, #f3f4f6 100%);
+        color: #2563eb;
+        border-color: #2563eb;
+        box-shadow: 0 2px 8px #2563eb22;
+        transform: scale(1.02);
+      }
+      body.dark-mode .add-day2-btn {
+        background: linear-gradient(90deg, #23262f 60%, #313442 100%);
+        color: #e5e7eb;
+        border: 1.5px solid #22d3ee;
+        box-shadow: 0 1px 4px #22d3ee22;
+      }
+      body.dark-mode .add-day2-btn:hover {
+        background: linear-gradient(90deg, #313442 60%, #23262f 100%);
+        color: #22d3ee;
+        border-color: #22d3ee;
+        box-shadow: 0 2px 8px #22d3ee44;
+        transform: scale(1.03);
+      }
+    
+
+    #btnNonImpact.selected {
+        background: #2563eb;
+        color: #fff;
+        border: 2px solid #2563eb;
+        box-shadow: 0 2px 8px #2563eb33;
+        position: relative;
+        z-index: 1;
     }
-  </style>
-</head>
+    #btnImpact.selected {
+        background: #f59e42;
+        color: #fff;
+        border: 2px solid #f59e42;
+        box-shadow: 0 2px 8px #f59e4233;
+        position: relative;
+        z-index: 1;
+      }
+      .notif-type-btn {
+        background: #f3f4f6;
+        color: #374151;
+        border: 2px solid #cbd5e1;
+        box-shadow: 0 2px 8px #f59e4200;
+        font-weight: 700;
+        transition: background 0.2s, color 0.2s, border 0.2s, box-shadow 0.2s;
+      }
+    #btnNonImpact:hover {
+        background: #2563eb;
+        color: #fff;
+        border: 2px solid #2563eb;
+    }
+    #btnImpact:hover {
+        background: #f59e42;
+        color: #fff;
+        border: 2px solid #f59e42;
+      }
+    body.dark-mode #btnNonImpact.selected {
+        background: #2563eb;
+        color: #fff;
+        border: 2px solid #2563eb;
+        box-shadow: 0 2px 8px #2563eb33, 0 0 0 2px #fff3;
+    }
+    body.dark-mode #btnImpact.selected {
+        background: #ffb95c;
+        color: #23262f;
+        border: 2px solid #ffb95c;
+        box-shadow: 0 2px 16px #ffb95c88, 0 0 0 2px #fff3;
+      }
+      body.dark-mode .notif-type-btn {
+        background: #23262f;
+        color: #e5e7eb;
+        border: 2px solid #313442;
+        box-shadow: 0 2px 8px #0002;
+      }
+    body.dark-mode #btnNonImpact:hover {
+        background: #2563eb;
+        color: #fff;
+        border: 2px solid #2563eb;
+    }
+    body.dark-mode #btnImpact:hover {
+        background: #ffb95c;
+        color: #23262f;
+        border: 2px solid #ffb95c;
+      }
+    </style></head>
 <body>
-  <div class="container">
-    <div class="header">
-      <img src="logoc.png" alt="Logo">
-      <h1>CE Agent</h1>
-    </div>
+<div class="container">
+<div aria-label="Settings" class="settings-fab" id="settingsFab" tabindex="0" title="Paramètres / Settings">
+<svg fill="none" height="28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="28"><circle cx="12" cy="12" r="3.5"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 8 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 5 15.4a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 5 8.6a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 8 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09A1.65 1.65 0 0 0 16 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.14.31.22.65.22 1v.09A1.65 1.65 0 0 0 21 12c0 .35-.08.69-.22 1z"></path></svg>
+</div>
+<div aria-label="Menu Paramètres" class="settings-menu" id="settingsMenu" style="display:none;" tabindex="-1"></div>
 
-    <div id="exampleToggle" style="text-align: right; margin-bottom: 10px;">
-      <button onclick="toggleExample()" style="background: none; border: none; color: var(--primary); cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
-        <span style="font-size: 1.2rem;">ℹ️</span> Show example
+
+<div class="header fade-in fade-in-delayed-1">
+<img alt="Logo" src="https://raw.githubusercontent.com/KraKy83/Raw-Data-Processor/main/logoc.png
+"/>
+<h1>CE Agent</h1>
+</div>
+<label class="fade-in fade-in-delayed-2" id="step1Label"></label>
+<textarea class="fade-in fade-in-delayed-3" id="inputData" placeholder=""></textarea>
+<button class="btn fade-in fade-in-delayed-4" id="processBtn" onclick="processData()"></button>
+<div id="results-section" style="margin-top:30px;">
+<div class="fade-in fade-in-delayed-5" style="display:flex; align-items:center; justify-content:space-between;">
+<div>
+<span id="resultsLabel" style="font-weight:700; font-size:1.1em;"></span>
+<button class="btn" id="toggleSelectBtn" onclick="toggleSelectAllGroups()" style="margin-left:18px; padding:7px 20px; font-size:0.95em;" type="button"></button>
+</div>
+</div>
+<div id="loader" style="display:none;"></div>
+<div class="fade-in fade-in-delayed-6" id="output"></div>
+</div>
+<hr style="margin: 40px 0;"/>
+<div id="notifTypeSection" style="margin-bottom: 24px;">
+<label class="fade-in fade-in-delayed-2" style="font-weight:700;">Notification Type:</label>
+<div class="fade-in fade-in-delayed-3" style="display:flex; gap:18px; margin-top:10px;">
+<button class="btn notif-type-btn" id="btnNonImpact" type="button">Non Impact Notification</button>
+<button class="btn notif-type-btn" id="btnImpact" type="button">Impact Notification</button>
+</div>
+</div>
+<label id="step2Label"></label>
+<label class="custom-file">
+<span id="emlFileLabel"></span>
+<input accept=".eml" id="emlFile" type="file"/>
+</label>
+<label id="excelLabel"></label>
+<label class="custom-file">
+<span id="excelFileLabel"></span>
+<input accept=".xlsx" id="excelFile" type="file"/>
+</label>
+<div class="input-2x2">
+<div class="fade-in fade-in-delayed-2" style="grid-column: 1 / span 2; margin-bottom: 10px;">
+<label class="required" id="maintenanceTypeLabel" style="font-weight:600;">Type Of Maintenance:</label>
+<input id="maintenanceTypeInput" placeholder="DCS Planned Maintenance - SITE ROOM - Maintenance test of earth leak protections" required="" style="width:100%; min-height:40px; font-size:15px; padding:13px; border-radius:10px; border:1.5px solid #a5b4fc; margin-top:10px; margin-bottom:0px; box-shadow:0 2px 8px rgba(37,99,235,0.07); transition:border 0.2s, box-shadow 0.2s; box-sizing:border-box;" type="text"/>
+</div>
+<div class="fade-in fade-in-delayed-3">
+<label class="required" id="siteLabel"></label>
+<input id="siteInput" placeholder="" required="" style="width:100%; min-height:40px; font-size:15px; padding:13px; border-radius:10px; border:1.5px solid #a5b4fc; margin-top:10px; margin-bottom:0px; box-shadow:0 2px 8px rgba(37,99,235,0.07); transition:border 0.2s, box-shadow 0.2s; box-sizing:border-box;" type="text"/>
+</div>
+<div class="fade-in fade-in-delayed-4">
+<label class="required" id="roomLabel"></label>
+<input id="roomInput" placeholder="" required="" style="width:100%; min-height:40px; font-size:15px; padding:13px; border-radius:10px; border:1.5px solid #a5b4fc; margin-top:10px; margin-bottom:0px; box-shadow:0 2px 8px rgba(37,99,235,0.07); transition:border 0.2s, box-shadow 0.2s; box-sizing:border-box;" type="text"/>
+</div>
+<div class="fade-in fade-in-delayed-5">
+<label class="required" id="day1StartLabel"></label>
+<input id="day1StartInput" required="" type="datetime-local"/>
+</div>
+<div class="fade-in fade-in-delayed-6">
+<label class="required" id="day1EndLabel"></label>
+<input id="day1EndInput" required="" type="datetime-local"/>
+</div>
+<div id="day2Fields" style="display:none; grid-column: 1 / span 2; grid-template-columns: 48% 48%; gap: 4%;">
+<div class="fade-in fade-in-delayed-3">
+<label id="day2StartLabel"></label>
+<input id="day2StartInput" type="datetime-local"/>
+</div>
+<div class="fade-in fade-in-delayed-4">
+<label id="day2EndLabel"></label>
+<input id="day2EndInput" type="datetime-local"/>
+</div>
+</div>
+<button class="btn add-day2-btn fade-in fade-in-delayed-5" id="addDay2Btn" onclick="showDay2Fields()" type="button">+ <span id="addDay2BtnText">Add Day 2 (optionnal)</span></button>
+
+<input id="sendDateInput" type="hidden"/>
+<div style="grid-column: 1 / span 2; margin-top: 18px; margin-bottom: 80px;">
+<label id="describeLabel"></label>
+<textarea id="describeInput" placeholder="" required="" rows="3" style="width:100%; min-height:60px; font-size:15px; padding:13px; border-radius:10px; border:1.5px solid #a5b4fc; margin-top:10px; margin-bottom:0px; box-shadow:0 2px 8px rgba(37,99,235,0.07); transition:border 0.2s, box-shadow 0.2s; box-sizing:border-box;"></textarea>
+</div>
+
+</div>
+<div id="impactFields" style="display:none; margin-top:32px;">
+<div class="fade-in fade-in-delayed-2" style="margin-bottom:18px;">
+<label for="riskLevel" style="font-weight:600;">Level of Risk:</label>
+<input class="impact-input" id="riskLevel" placeholder="LOR2" style="width:100%; min-height:40px; font-size:15px; padding:13px; border-radius:10px; border:1.5px solid #a5b4fc; margin-top:10px; margin-bottom:0px; box-shadow:0 2px 8px rgba(37,99,235,0.07); transition:border 0.2s, box-shadow 0.2s; box-sizing:border-box;" type="text"/>
+</div>
+<div class="fade-in fade-in-delayed-3" style="margin-bottom:18px;">
+<label for="devicesImpacted" style="font-weight:600;">Devices Impacted That will Be Offline:</label>
+<textarea class="impact-input" id="devicesImpacted" placeholder="List the systems that will be affected by the work and the impact:" rows="2" style="width:100%; min-height:40px; font-size:15px; padding:13px; border-radius:10px; border:1.5px solid #a5b4fc; margin-top:10px; margin-bottom:0px; box-shadow:0 2px 8px rgba(37,99,235,0.07); transition:border 0.2s, box-shadow 0.2s; box-sizing:border-box;"></textarea>
+</div>
+<div class="fade-in fade-in-delayed-4" style="margin-bottom:18px;">
+<label for="redundancyMaintained" style="font-weight:600;">Will Redundancy be Maintained for the Devices Listed Above?</label>
+<input class="impact-input" id="redundancyMaintained" placeholder="Yes/No" style="width:100%; min-height:40px; font-size:15px; padding:13px; border-radius:10px; border:1.5px solid #a5b4fc; margin-top:10px; margin-bottom:0px; box-shadow:0 2px 8px rgba(37,99,235,0.07); transition:border 0.2s, box-shadow 0.2s; box-sizing:border-box;" type="text"/>
+</div>
+<div class="fade-in fade-in-delayed-5" style="margin-bottom:18px;">
+<label for="actionsRequired" style="font-weight:600;">Action(s) Required:</label>
+<textarea class="impact-input" id="actionsRequired" placeholder="Clearly indicate the action required from the EG" rows="2" style="width:100%; min-height:40px; font-size:15px; padding:13px; border-radius:10px; border:1.5px solid #a5b4fc; margin-top:10px; margin-bottom:0px; box-shadow:0 2px 8px rgba(37,99,235,0.07); transition:border 0.2s, box-shadow 0.2s; box-sizing:border-box;"></textarea>
+</div>
+<div class="fade-in fade-in-delayed-6" style="margin-bottom:18px;">
+<label for="actionsDueDate" style="font-weight:600;">Action(s) Required Due Date:</label>
+<textarea class="impact-input" id="actionsDueDate" placeholder="List the latest date of any actions required form the EG such as Traffic Removal/acknowledgment or any other requirements listed here" rows="2" style="width:100%; min-height:40px; font-size:15px; padding:13px; border-radius:10px; border:1.5px solid #a5b4fc; margin-top:10px; margin-bottom:0px; box-shadow:0 2px 8px rgba(37,99,235,0.07); transition:border 0.2s, box-shadow 0.2s; box-sizing:border-box;"></textarea>
+</div>
+</div>
+
+
+<div style="margin-top:32px;">
+<button class="btn fade-in fade-in-delayed-2" id="applyBtn" onclick="applyTemplate()"></button>
+<button class="btn fade-in fade-in-delayed-3" id="downloadEmlBtn" onclick="downloadEML()" style="display:none; margin-top:10px;"></button>
+</div>
+<label id="loadedNamesLabel" style="display:none;"></label><span id="loadedNamesStatus"></span>
+<textarea id="toField" readonly="" style="display:none;"></textarea>
+<label id="emailBodyLabel" style="display:none;"></label><span id="emailBodyStatus"></span>
+<textarea id="customEmailBody" placeholder="" style="display:none;"></textarea>
+</div>
+
+<script>
+    // Settings FAB logic
+    const fab = document.getElementById('settingsFab');
+    const menu = document.getElementById('settingsMenu');
+    // Inject menu content dynamically to avoid duplicate IDs
+    menu.innerHTML = `
+      <button id="darkModeToggle" class="btn settings-menu-btn" type="button" aria-pressed="false" aria-label="Toggle dark mode">🌙 <span id="darkModeText">Dark Mode</span></button>
+      <button id="langToggle" class="btn settings-menu-btn" type="button" aria-label="Changer la langue / Switch language">
+        <img id="langFlagImg" src="GBflag.png" alt="flag" style="width:22px;height:16px;object-fit:cover;border-radius:3px;box-shadow:0 1px 3px #0002;vertical-align:middle;">
+        <span id="langName" style="font-size:1em;vertical-align:middle;">English</span>
       </button>
-    </div>
+      <button id="helpBtn" class="btn settings-menu-btn" type="button" aria-label="Assistance / Help" title="Besoin d'aide ? Cliquez pour contacter tcecchini@microsoft.com sur Teams">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M22 7V5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2"/><polyline points="2,7 12,13 22,7"/></svg>
+        <span id="helpBtnText" style="font-size:1em;">?</span>
+      </button>
+    `;
+    let menuOpen = false;
+    function openMenu() {
+      menu.style.display = 'flex';
+      menuOpen = true;
+      setTimeout(() => menu.focus(), 10);
+    }
+    function closeMenu() {
+      menu.style.display = 'none';
+      menuOpen = false;
+    }
+    fab.addEventListener('click', e => {
+      e.stopPropagation();
+      if (menuOpen) { closeMenu(); } else { openMenu(); }
+    });
+    fab.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (menuOpen) { closeMenu(); } else { openMenu(); } }
+    });
+    menu.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { closeMenu(); fab.focus(); }
+    });
+    document.addEventListener('click', e => {
+      if (menuOpen && !menu.contains(e.target) && e.target !== fab) closeMenu();
+    });
+    // Focus trap for accessibility
+    menu.addEventListener('focusout', e => {
+      setTimeout(() => {
+        if (menuOpen && !menu.contains(document.activeElement)) closeMenu();
+      }, 10);
+    });
+  
 
-    <div id="exampleContent" style="display: none; margin-bottom: 20px;">
-      <p><strong>Expected format:</strong> BGTeams (separated by ;) followed by a tab or at least two spaces, then the property group.</p>
-      <pre>=Test1; =Test2; =Test3    Azure Compute EMEA
-=Test10; =Test11; =Test12    Exchange</pre>
-    </div>
+    function showDay2Fields() {
+      document.getElementById('day2Fields').style.display = 'grid';
+      document.getElementById('addDay2Btn').style.display = 'none';
+    }
+  
 
-    <textarea id="inputData" placeholder="Paste your data here..."></textarea>
+    // Notification type logic
+    const btnImpact = document.getElementById('btnImpact');
+    const btnNonImpact = document.getElementById('btnNonImpact');
+    const impactFields = document.getElementById('impactFields');
+    btnImpact.addEventListener('click', function() {
+      btnImpact.classList.add('selected');
+      btnNonImpact.classList.remove('selected');
+      impactFields.style.display = '';
+    });
+    btnNonImpact.addEventListener('click', function() {
+      btnNonImpact.classList.add('selected');
+      btnImpact.classList.remove('selected');
+      impactFields.style.display = 'none';
+    });
+    // Par défaut, masquer les champs impactFields
+    impactFields.style.display = 'none';
+  
 
-    <div class="button-row">
-      <button class="btn btn-primary" onclick="processData()">Run Script</button>
-      <button class="btn btn-secondary" onclick="copyOutput()">Copy Result</button>
-    </div>
+    // Dark mode toggle logic
+    const darkModeBtn = document.getElementById('darkModeToggle');
+    function setDarkMode(on) {
+      document.body.classList.toggle('dark-mode', on);
+      updateLangUI();
+      localStorage.setItem('ceagent-darkmode', on ? '1' : '0');
+    }
+    darkModeBtn.addEventListener('click', () => {
+      setDarkMode(!document.body.classList.contains('dark-mode'));
+    });
+    // Help button logic
+    document.getElementById('helpBtn').addEventListener('click', function() {
+      window.open('https://teams.microsoft.com/l/chat/0/0?users=tcecchini@microsoft.com', '_blank');
+    });
+    // Multi-language support
+    const translations = {
+      en: {
+        darkMode: '🌙 Dark Mode',
+        lightMode: '☀️ Light Mode',
+        lang: 'English',
+        flag: '🇬🇧',
+        altLang: 'Français',
+        altFlag: '🇫�',
+        step1: '1. Paste your raw data:',
+        process: 'Process Data',
+        results: 'Results:',
+        selectAll: 'Select All',
+        deselectAll: 'Deselect All',
+        step2: '2. Upload your .eml template and fill variables',
+        excel: 'Upload Excel File (optional):',
+        emlFile: 'Choose .eml file',
+        excelFile: 'Choose .xlsx file',
+        site: 'Site',
+        room: 'Room',
+        day1Start: 'Day 1 Start',
+        day1End: 'Day 1 End',
+        day2Start: 'Day 2 Start',
+        day2End: 'Day 2 End',
+        describe: 'Description of works',
+        apply: 'Apply Template',
+        download: 'Download .eml File',
+        loadedNames: 'Loaded Names',
+        emailBody: 'Email Body',
+        emailBodyPlaceholder: 'Your .eml content or email body...',
+        sitePlaceholder: 'MRS22',
+        roomPlaceholder: 'F01C04',
+        inputPlaceholder: '=user1; =user2;   GroupName',
+        describePlaceholder: 'This operation will require the PDUs to be switched off. Racks will be single sourcing during work on each PDU. Devices with only one feed could lose power. No simultaneous interruption of both feeds.'
+      },
+      fr: {
+        darkMode: '🌙 Mode Sombre',
+        lightMode: '☀️ Mode Clair',
+        lang: 'Français',
+        flag: '🇫🇷',
+        altLang: 'English',
+        altFlag: '🇬🇧',
+        step1: '1. Collez vos données brutes :',
+        process: 'Traiter',
+        results: 'Résultats :',
+        selectAll: 'Tout sélectionner',
+        deselectAll: 'Tout désélectionner',
+        step2: '2. Chargez votre modèle .eml et remplissez les variables',
+        excel: 'Charger un fichier Excel (optionnel) :',
+        emlFile: 'Choisir un fichier .eml',
+        excelFile: 'Choisir un fichier .xlsx',
+        site: 'Site',
+        room: 'Salle',
+        day1Start: 'Début Jour 1',
+        day1End: 'Fin Jour 1',
+        day2Start: 'Début Jour 2',
+        day2End: 'Fin Jour 2',
+        describe: 'Description des travaux',
+        apply: 'Appliquer le modèle',
+        download: 'Télécharger le fichier .eml',
+        loadedNames: 'Noms chargés',
+        emailBody: 'Corps de l’email',
+        emailBodyPlaceholder: 'Votre contenu .eml ou corps de mail...',
+        sitePlaceholder: 'ex : MRS22',
+        roomPlaceholder: 'ex : F01C04',
+        inputPlaceholder: '=utilisateur1; =utilisateur2;   NomDuGroupe',
+        describePlaceholder: 'Cette opération nécessitera l’arrêt des PDUs. Les racks seront alimentés par une seule source pendant l’intervention sur chaque PDU. Les équipements avec une seule alimentation pourraient perdre le courant. Pas d’interruption simultanée des deux alimentations.'
+      }
+    };
+    let currentLang = 'en';
+    function updateLangUI() {
+      const t = translations[currentLang];
+      // Top buttons
+      darkModeBtn.textContent = document.body.classList.contains('dark-mode') ? t.lightMode : t.darkMode;
+      // Show the flag image of the language to switch to (not the current one)
+      const langFlagImg = document.getElementById('langFlagImg');
+      const langName = document.getElementById('langName');
+      if (currentLang === 'en') {
+        langFlagImg.src = 'https://raw.githubusercontent.com/KraKy83/Raw-Data-Processor/main/frenchflag.png';
+        langFlagImg.alt = 'Français';
+        langName.textContent = translations.fr.lang;
+      } else {
+        langFlagImg.src = 'https://raw.githubusercontent.com/KraKy83/Raw-Data-Processor/main/GBflag.png';
+        langFlagImg.alt = 'English';
+        langName.textContent = translations.en.lang;
+      }
+      // Help button text
+      document.getElementById('helpBtnText').textContent = currentLang === 'fr' ? 'Assistance' : 'Help';
+      // Main labels and placeholders
+      document.getElementById('step1Label').textContent = t.step1;
+      document.getElementById('inputData').placeholder = t.inputPlaceholder;
+      document.getElementById('processBtn').textContent = t.process;
+      document.getElementById('resultsLabel').textContent = t.results;
+      document.getElementById('toggleSelectBtn').textContent = areAllGroupsSelected() ? t.deselectAll : t.selectAll;
+      document.getElementById('step2Label').textContent = t.step2;
+      document.getElementById('excelLabel').textContent = t.excel;
+      document.getElementById('emlFileLabel').textContent = t.emlFile;
+      document.getElementById('excelFileLabel').textContent = t.excelFile;
+      document.getElementById('maintenanceTypeLabel').textContent = currentLang === 'fr' ? 'Type de maintenance :' : 'Type Of Maintenance:';
+      document.getElementById('maintenanceTypeInput').placeholder = currentLang === 'fr' ? 'DCS Planned Maintenance - SITE ROOM - Maintenance test of earth leak protections' : 'DCS Planned Maintenance - SITE ROOM - Maintenance test of earth leak protections';
+      document.getElementById('addDay2BtnText').textContent = currentLang === 'fr' ? 'Ajouter un deuxième jour (optionnel)' : 'Add Day  2 (optionnal)';
+      document.getElementById('siteLabel').textContent = t.site;
+      document.getElementById('siteInput').placeholder = t.sitePlaceholder;
+      document.getElementById('roomLabel').textContent = t.room;
+      document.getElementById('roomInput').placeholder = t.roomPlaceholder;
+      document.getElementById('day1StartLabel').textContent = t.day1Start;
+      document.getElementById('day1EndLabel').textContent = t.day1End;
+      document.getElementById('day2StartLabel').textContent = t.day2Start;
+      document.getElementById('day2EndLabel').textContent = t.day2End;
+      document.getElementById('describeLabel').textContent = t.describe;
+      document.getElementById('describeInput').placeholder = t.describePlaceholder;
+      document.getElementById('applyBtn').textContent = t.apply;
+      document.getElementById('downloadEmlBtn').textContent = t.download;
+      document.getElementById('loadedNamesLabel').textContent = t.loadedNames + ' ';
+      document.getElementById('emailBodyLabel').textContent = t.emailBody + ' ';
+      document.getElementById('customEmailBody').placeholder = t.emailBodyPlaceholder;
+    }
+    document.getElementById('langToggle').addEventListener('click', function() {
+      currentLang = currentLang === 'en' ? 'fr' : 'en';
+      updateLangUI();
+    });
+    // Update language on dark mode toggle
+    darkModeBtn.addEventListener('click', function() {
+      updateLangUI();
+    });
+    window.addEventListener('DOMContentLoaded', function() {
+      setDarkMode(localStorage.getItem('ceagent-darkmode') === '1');
+      updateLangUI();
+    });
+    document.getElementById('emlFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        document.getElementById('emlFileLabel').textContent = file.name;
+      }
+    });
+    document.getElementById('excelFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        document.getElementById('excelFileLabel').textContent = file.name;
+      }
+    });
 
-    <h2>Result:</h2>
-    <div id="output" aria-live="polite" aria-atomic="true"></div>
+    // Set default send date to today silently
+    window.addEventListener('DOMContentLoaded', () => {
+      const today = new Date();
+      const pad = n => n.toString().padStart(2, '0');
+      const local = today.getFullYear() + '-' + pad(today.getMonth()+1) + '-' + pad(today.getDate()) + 'T' + pad(today.getHours()) + ':' + pad(today.getMinutes());
+      document.getElementById('sendDateInput').value = local;
+    });
+  
 
-    <div id="emailBodyContainer">
-      <label for="customEmailBody">Custom email body:</label>
-      <textarea id="customEmailBody" placeholder="Write your message here..." style="height: 120px;"></textarea>
-    </div>
-
-    <div id="sendEmailContainer">
-      <button id="sendEmailBtn" onclick="sendEmails()">Send Email</button>
-    </div>
-  </div>
-
-  <script>
     let groupDataGlobal = {};
-    let allSelected = true;
+    let emlTemplate = '';
+    let uploadedExcelFile = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const today = new Date();
+      const pad = n => n.toString().padStart(2, '0');
+      const local = today.getFullYear() + '-' + pad(today.getMonth()+1) + '-' + pad(today.getDate()) + 'T' + pad(today.getHours()) + ':' + pad(today.getMinutes());
+      document.getElementById('sendDateInput').value = local;
+    });
+
+    document.getElementById('emlFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          emlTemplate = ev.target.result;
+          document.getElementById('customEmailBody').value = emlTemplate;
+        }
+        reader.readAsText(file);
+      }
+    });
+
+    document.getElementById('excelFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        uploadedExcelFile = file;
+      }
+    });
 
     function processData() {
       const input = document.getElementById('inputData').value.trim();
       const outputDiv = document.getElementById('output');
+      const loader = document.getElementById('loader');
       outputDiv.innerHTML = '';
       groupDataGlobal = {};
 
-      if (!input) {
-        alert('Please paste some data.');
-        return;
-      }
+      if (!input) return alert('Please paste some data.');
 
-      const lines = input.split('\n');
+      // Affiche le loader si le traitement prend plus de 0.5s
+      let loaderTimeout = setTimeout(() => {
+        loader.innerHTML = '<div class="loader"></div>';
+        loader.style.display = '';
+      }, 500);
 
-      lines.forEach(line => {
-        const parts = line.split(/\t+|\s{2,}/);
-        if (parts.length < 2) return;
+      setTimeout(() => {
+        loader.style.display = 'none';
+        loader.innerHTML = '';
 
-        const bgTeamRaw = parts[0].trim();
-        const propertyGroup = parts[1].trim();
+        const lines = input.split('\n');
+        lines.forEach(line => {
+          const parts = line.split(/\t+|\s{2,}/);
+          if (parts.length < 2) return;
+          const emails = parts[0]
+            .split(';')
+            .map(e => e.trim().replace(/^=/, ''))
+            .filter(e => e !== '')
+            .map(e => e + '@microsoft.com');
 
-        if (!propertyGroup || !bgTeamRaw) return;
-
-        if (!groupDataGlobal[propertyGroup]) {
-          groupDataGlobal[propertyGroup] = new Set();
-        }
-
-        const values = bgTeamRaw.split(';');
-        values.forEach(val => {
-          const clean = val.trim().replace(/^=/, '');
-          if (clean) {
-            groupDataGlobal[propertyGroup].add(clean.toLowerCase() + '@microsoft.com');
-          }
+          const group = parts[1].trim();
+          if (!groupDataGlobal[group]) groupDataGlobal[group] = new Set();
+          emails.forEach(email => groupDataGlobal[group].add(email.toLowerCase()));
         });
+
+        let i = 0;
+        for (const group in groupDataGlobal) {
+          const groupId = group.replace(/\s+/g, '_');
+          const div = document.createElement('div');
+          div.style.marginBottom = '18px';
+          div.classList.add('fade-in');
+          div.style.animationDelay = (0.08 * i) + 's';
+
+          const header = document.createElement('div');
+          header.className = 'group-header';
+          header.style.display = 'flex';
+          header.style.alignItems = 'center';
+          header.style.justifyContent = 'space-between';
+
+          // Place checkbox, label et bouton show/hide dans le même container
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.id = `cb_${groupId}`;
+          checkbox.value = group;
+          checkbox.checked = true;
+          checkbox.setAttribute('aria-checked', 'true');
+          checkbox.setAttribute('aria-label', group + ' selection');
+          checkbox.style.marginRight = '8px';
+          checkbox.addEventListener('change', function() {
+            checkbox.setAttribute('aria-checked', checkbox.checked ? 'true' : 'false');
+            updateToggleSelectBtn();
+          });
+
+          const label = document.createElement('label');
+          label.setAttribute('for', `cb_${groupId}`);
+          label.innerText = group;
+          label.style.fontWeight = '700';
+          label.style.fontSize = '1.18em';
+
+          const showBtn = document.createElement('button');
+          showBtn.textContent = '👁 Show emails';
+          showBtn.className = 'btn-showhide';
+          showBtn.setAttribute('aria-expanded', 'false');
+          showBtn.setAttribute('aria-controls', `emails_${groupId}`);
+          showBtn.setAttribute('aria-label', 'Afficher ou masquer les emails du groupe ' + group);
+          showBtn.onclick = () => {
+            const emails = document.getElementById(`emails_${groupId}`);
+            const isOpen = emails.classList.contains('open');
+            if (isOpen) {
+              emails.classList.remove('open');
+              setTimeout(() => { emails.style.display = 'none'; }, 350);
+            } else {
+              emails.style.display = 'block';
+              setTimeout(() => { emails.classList.add('open'); }, 10);
+            }
+            showBtn.textContent = isOpen ? '👁 Show emails' : '🙈 Hide emails';
+            showBtn.setAttribute('aria-expanded', (!isOpen).toString());
+          };
+
+          header.appendChild(checkbox);
+          header.appendChild(label);
+          header.appendChild(showBtn);
+
+          const emailDiv = document.createElement('div');
+          emailDiv.className = 'emails slide-toggle';
+          emailDiv.id = `emails_${groupId}`;
+          // Affichage stylé : chaque email dans un span
+          emailDiv.innerHTML = Array.from(groupDataGlobal[group])
+            .map(email => `<span class="email-item">${email}</span>`)
+            .join('');
+          emailDiv.style.display = 'none';
+          emailDiv.style.marginLeft = '28px';
+          emailDiv.style.marginTop = '6px';
+
+          div.appendChild(header);
+          div.appendChild(emailDiv);
+          outputDiv.appendChild(div);
+          i++;
+        }
+        updateToggleSelectBtn();
+        clearTimeout(loaderTimeout);
+      }, 10);
+    }
+
+    function formatDateTime(dt) {
+      if (!dt) return '';
+      const [date, time] = dt.split('T');
+      return date + ' ' + (time ? time : '');
+    }
+    function applyTemplate() {
+      const selectedGroups = [...document.querySelectorAll('input[type="checkbox"]:checked')].map(cb => cb.value);
+      let allEmails = [];
+      selectedGroups.forEach(group => {
+        allEmails = allEmails.concat(Array.from(groupDataGlobal[group] || []));
       });
 
-      if (Object.keys(groupDataGlobal).length === 0) {
-        outputDiv.textContent = 'No valid data found.';
-        return;
-      }
-
-      // Add Select/Deselect Toggle Button
-      const toggleBtn = document.createElement('button');
-      toggleBtn.className = 'select-toggle-btn';
-      toggleBtn.textContent = 'Deselect All';
-      toggleBtn.onclick = function () {
-        allSelected = !allSelected;
-        toggleBtn.textContent = allSelected ? 'Deselect All' : 'Select All';
-        document.querySelectorAll('.group-checkbox').forEach(cb => cb.checked = allSelected);
-      };
-      outputDiv.appendChild(toggleBtn);
-
-      // GROUPS LOOP
-      for (const group in groupDataGlobal) {
-        const groupId = group.replace(/\s+/g, '_');
-
-        const groupDiv = document.createElement('div');
-        groupDiv.classList.add('group');
-
-        const topRow = document.createElement('div');
-        topRow.classList.add('group-header');
-
-        const label = document.createElement('label');
-        label.setAttribute('for', `groupCheckbox_${groupId}`);
-
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = true;
-        checkbox.value = group;
-        checkbox.id = `groupCheckbox_${groupId}`;
-        checkbox.classList.add('group-checkbox');
-
-        label.appendChild(checkbox);
-        label.appendChild(document.createTextNode(group));
-
-        const toggleEmailsBtn = document.createElement('button');
-        toggleEmailsBtn.textContent = '👁 Show Emails';
-        toggleEmailsBtn.className = 'toggle-btn';
-        toggleEmailsBtn.onclick = function () {
-          const emailsDiv = document.getElementById(`emails_${groupId}`);
-          const isHidden = emailsDiv.style.display === 'none';
-          emailsDiv.style.display = isHidden ? 'block' : 'none';
-          toggleEmailsBtn.textContent = isHidden ? '🙈 Hide Emails' : '👁 Show Emails';
-        };
-
-        topRow.appendChild(label);
-        topRow.appendChild(toggleEmailsBtn);
-        groupDiv.appendChild(topRow);
-
-        const emailsDiv = document.createElement('div');
-        emailsDiv.classList.add('emails');
-        emailsDiv.id = `emails_${groupId}`;
-        emailsDiv.style.display = 'none';
-        emailsDiv.textContent = Array.from(groupDataGlobal[group]).sort().join('\n');
-
-        groupDiv.appendChild(emailsDiv);
-        outputDiv.appendChild(groupDiv);
-      }
-    }
-
-    function sendEmails() {
-      const checkboxes = document.querySelectorAll('.group-checkbox:checked');
-      if (checkboxes.length === 0) {
-        alert('Please select at least one group to send emails.');
-        return;
-      }
-
-      const customBody = document.getElementById('customEmailBody').value.trim();
-
-      checkboxes.forEach(cb => {
-        const group = cb.value;
-        const emails = Array.from(groupDataGlobal[group]);
-        if (emails.length === 0) return;
-
-        const subject = `Group: ${group}`;
-        const bodyContent = customBody || `Hello ${group} team,\n\n`;
-
-        const mailto = `mailto:${emails.join(',')}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyContent)}`;
-        window.open(mailto);
-      });
-    }
-
-    function copyOutput() {
-      if (!groupDataGlobal || Object.keys(groupDataGlobal).length === 0) {
-        alert('No result to copy. Please process data first.');
-        return;
-      }
-      const textToCopy = Object.entries(groupDataGlobal).map(([group, emailsSet]) => {
-        const emails = Array.from(emailsSet).sort().join('\n');
-        return `${group}:\n${emails}`;
-      }).join('\n\n');
-
-      navigator.clipboard.writeText(textToCopy.trim())
-        .then(() => alert('Result copied to clipboard!'))
-        .catch(() => alert('Failed to copy. Please try manually.'));
-    }
-
-    function toggleExample() {
-      const content = document.getElementById('exampleContent');
-      const button = document.querySelector('#exampleToggle button');
-
-      if (content.style.display === 'none') {
-        content.style.display = 'block';
-        button.innerHTML = '<span style="font-size: 1.2rem;">🔽</span> Hide example';
+      let hasError = false;
+      if (allEmails.length === 0) {
+        hasError = true;
+        document.getElementById('loadedNamesStatus').innerHTML = '<span style="color:#dc2626;font-size:1.1em;">❌</span>';
       } else {
-        content.style.display = 'none';
-        button.innerHTML = '<span style="font-size: 1.2rem;">ℹ️</span> Show example';
+        document.getElementById('loadedNamesStatus').innerHTML = '<span style="color:#16a34a;font-size:1.1em;">✅</span>';
+      }
+      document.getElementById('toField').value = allEmails.join(', ');
+
+      let body = emlTemplate || document.getElementById('customEmailBody').value;
+
+      // Détecter si Impact Notification est sélectionné
+      const isImpact = document.getElementById('btnImpact').classList.contains('selected');
+      // Récupérer les valeurs Day 2 seulement si visibles
+      let day2Start = '';
+      let day2End = '';
+      let showDay2 = false;
+      if (document.getElementById('day2Fields').style.display !== 'none') {
+        day2Start = document.getElementById('day2StartInput').value;
+        day2End = document.getElementById('day2EndInput').value;
+        showDay2 = true;
+      }
+      // Fonction pour supprimer les lignes Day 2 si non affichées
+      function removeDay2Lines(str) {
+        // Supprime les lignes contenant Day 2: ... UTC (même si la balise est vide)
+        return str.replace(/.*Day 2: ?.*UTC.*\n?/gi, '');
+      }
+      // Remplacement dynamique de DATE_RANGE
+      const day1StartVal = formatDateTime(document.getElementById('day1StartInput').value);
+      const day2EndVal = formatDateTime(day2End);
+      let dateRange = '';
+      if (day1StartVal && day2EndVal && day1StartVal !== day2EndVal) {
+        dateRange = `between <strong>${day1StartVal}</strong> and <strong>${day2EndVal}</strong>`;
+      } else if (day1StartVal) {
+        dateRange = `at <strong>${day1StartVal}</strong>`;
+      }
+      if (isImpact) {
+        // Remplacer avec les balises spécifiques Impact
+        body = body
+          .replace(/\{\{\s*Maintenance\s*\}\}/gi, document.getElementById('maintenanceTypeInput').value)
+          .replace(/\{\{\s*LOR\s*\}\}/g, document.getElementById('riskLevel').value)
+          .replace(/\{\{\s*DevicesOFF\s*\}\}/g, document.getElementById('devicesImpacted').value)
+          .replace(/\{\{\s*REDUNDANCY\s*\}\}/g, document.getElementById('redundancyMaintained').value)
+          .replace(/\{\{\s*ActionRequired\s*\}\}/g, document.getElementById('actionsRequired').value)
+          .replace(/\{\{\s*RequiredDate\s*\}\}/g, document.getElementById('actionsDueDate').value)
+          // Les balises génériques aussi si besoin
+          .replace(/\{\{\s*MAINTENANCETYPE\s*\}\}/g, document.getElementById('maintenanceTypeInput').value)
+          .replace(/\{\{\s*SITE\s*\}\}/g, document.getElementById('siteInput').value)
+          .replace(/\{\{\s*ROOM\s*\}\}/g, document.getElementById('roomInput').value)
+          .replace(/\{\{\s*DAY1START\s*\}\}/g, day1StartVal)
+          .replace(/\{\{\s*DAY1END\s*\}\}/g, formatDateTime(document.getElementById('day1EndInput').value))
+          .replace(/\{\{\s*DAY2START\s*\}\}/g, formatDateTime(day2Start))
+          .replace(/\{\{\s*DAY2END\s*\}\}/g, day2EndVal)
+          .replace(/\{\{\s*DESCRIBE\s*\}\}/g, document.getElementById('describeInput').value)
+          .replace(/\{\{\s*SENDDATE\s*\}\}/g, formatDateTime(document.getElementById('sendDateInput').value))
+          .replace(/\{\{\s*DATE_RANGE\s*\}\}/g, dateRange);
+        if (!showDay2) body = removeDay2Lines(body);
+      } else {
+        // Non Impact : comportement actuel
+        body = body
+          .replace(/\{\{\s*Maintenance\s*\}\}/gi, document.getElementById('maintenanceTypeInput').value)
+          .replace(/\{\{\s*MAINTENANCETYPE\s*\}\}/g, document.getElementById('maintenanceTypeInput').value)
+          .replace(/\{\{\s*SITE\s*\}\}/g, document.getElementById('siteInput').value)
+          .replace(/\{\{\s*ROOM\s*\}\}/g, document.getElementById('roomInput').value)
+          .replace(/\{\{\s*DAY1START\s*\}\}/g, day1StartVal)
+          .replace(/\{\{\s*DAY1END\s*\}\}/g, formatDateTime(document.getElementById('day1EndInput').value))
+          .replace(/\{\{\s*DAY2START\s*\}\}/g, formatDateTime(day2Start))
+          .replace(/\{\{\s*DAY2END\s*\}\}/g, day2EndVal)
+          .replace(/\{\{\s*DESCRIBE\s*\}\}/g, document.getElementById('describeInput').value)
+          .replace(/\{\{\s*SENDDATE\s*\}\}/g, formatDateTime(document.getElementById('sendDateInput').value))
+          .replace(/\{\{\s*DATE_RANGE\s*\}\}/g, dateRange);
+        if (!showDay2) body = removeDay2Lines(body);
+      }
+
+      document.getElementById('customEmailBody').value = body;
+
+      if (!body.trim()) {
+        hasError = true;
+        document.getElementById('emailBodyStatus').innerHTML = '<span style="color:#dc2626;font-size:1.1em;">❌</span>';
+      } else {
+        document.getElementById('emailBodyStatus').innerHTML = '<span style="color:#16a34a;font-size:1.1em;">✅</span>';
+      }
+
+      document.getElementById('loadedNamesLabel').style.display = '';
+      document.getElementById('toField').style.display = '';
+      document.getElementById('emailBodyLabel').style.display = '';
+      document.getElementById('customEmailBody').style.display = '';
+      document.getElementById('downloadEmlBtn').style.display = '';
+
+      if (!hasError) {
+        alert("Template applied with selected variables and recipients.");
+      } else {
+        alert("Erreur : Veuillez vérifier les destinataires et le corps de l'email.");
       }
     }
-  </script>
-</body>
+
+    function downloadEML() {
+      const to = document.getElementById('toField').value;
+      const body = document.getElementById('customEmailBody').value;
+      const subject = "Notification";
+      const boundary = "boundary_" + Date.now();
+
+      let emlParts = [
+        "To: " + to,
+        "Subject: " + subject,
+        "MIME-Version: 1.0",
+        `Content-Type: multipart/mixed; boundary="${boundary}"`,
+        "",
+        `--${boundary}`,
+        "Content-Type: text/plain; charset=UTF-8",
+        "Content-Transfer-Encoding: 7bit",
+        "",
+        body
+      ];
+
+      if (uploadedExcelFile) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const base64 = btoa(
+            new Uint8Array(e.target.result)
+              .reduce((data, byte) => data + String.fromCharCode(byte), '')
+          );
+
+          emlParts.push(
+            `--${boundary}`,
+            `Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; name="${uploadedExcelFile.name}"`,
+            "Content-Transfer-Encoding: base64",
+            `Content-Disposition: attachment; filename="${uploadedExcelFile.name}"`,
+            "",
+            base64,
+            `--${boundary}--`
+          );
+
+          const emlContent = emlParts.join("\r\n");
+          const blob = new Blob([emlContent], { type: 'message/rfc822' });
+          const url = URL.createObjectURL(blob);
+
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'generated-email.eml';
+          a.click();
+
+          URL.revokeObjectURL(url);
+        };
+        reader.readAsArrayBuffer(uploadedExcelFile);
+      } else {
+        emlParts.push(`--${boundary}--`);
+        const emlContent = emlParts.join("\r\n");
+        const blob = new Blob([emlContent], { type: 'message/rfc822' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'generated-email.eml';
+        a.click();
+
+        URL.revokeObjectURL(url);
+      }
+    }
+
+    function areAllGroupsSelected() {
+      const checkboxes = document.querySelectorAll('#output input[type="checkbox"]');
+      return checkboxes.length > 0 && Array.from(checkboxes).every(cb => cb.checked);
+    }
+    function toggleSelectAllGroups() {
+      const checkboxes = document.querySelectorAll('#output input[type="checkbox"]');
+      const allSelected = areAllGroupsSelected();
+      checkboxes.forEach(cb => cb.checked = !allSelected);
+      updateToggleSelectBtn();
+    }
+    function updateToggleSelectBtn() {
+      const btn = document.getElementById('toggleSelectBtn');
+      const t = translations[currentLang];
+      if (areAllGroupsSelected()) {
+        btn.textContent = t.deselectAll;
+        btn.classList.add('deselect');
+      } else {
+        btn.textContent = t.selectAll;
+        btn.classList.remove('deselect');
+      }
+    }
+  </script></body>
 </html>
+
+
+
